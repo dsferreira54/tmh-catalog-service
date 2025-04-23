@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -40,10 +41,11 @@ public class HatResource {
         return Hat.find("color", color).list();
     }
 
-    @GET
+    @POST
     @Path("/count")
-    @Produces("application/json")
-    public Long countByArtisanId(@QueryParam("artisanId") String artisanId) {
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("text/plain")
+    public Long countByArtisanId(@FormParam("artisanId") Long artisanId) {
         return Hat.find("artisan.id", artisanId).count();
     }
 
