@@ -1,6 +1,7 @@
 package fun.toomanyhats.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import fun.toomanyhats.dto.HatDTO;
 import fun.toomanyhats.model.Artisan;
@@ -8,6 +9,7 @@ import fun.toomanyhats.model.Hat;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
@@ -22,6 +24,27 @@ public class HatResource {
     @Produces("application/json")
     public List<Hat> listAll() {
         return Hat.listAll();
+    }
+
+    @GET
+    @Path("/find")
+    @Produces("application/json")
+    public Optional<Hat> findByNameAndColor(@QueryParam("name") String name, @QueryParam("color") String color) {
+        return Hat.find("name = ?1 and color = ?2", name, color).firstResultOptional();
+    }
+
+    @GET
+    @Path("/filter")
+    @Produces("application/json")
+    public List<Hat> filterByColor(@QueryParam("color") String color) {
+        return Hat.find("color", color).list();
+    }
+
+    @GET
+    @Path("/count")
+    @Produces("application/json")
+    public Long countByArtisanId(@QueryParam("artisanId") String artisanId) {
+        return Hat.find("artisan.id", artisanId).count();
     }
 
     @POST

@@ -1,7 +1,6 @@
 package fun.toomanyhats.model;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import jakarta.json.bind.annotation.JsonbTransient;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +16,6 @@ public class Hat extends PanacheEntityBase {
     public String name;
     public String color;
 
-    @JsonbTransient
     @ManyToOne(optional = false)
     public Artisan artisan;
 }
