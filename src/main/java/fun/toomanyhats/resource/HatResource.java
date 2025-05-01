@@ -2,15 +2,18 @@ package fun.toomanyhats.resource;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Callable;
 
 import fun.toomanyhats.dto.HatDTO;
 import fun.toomanyhats.model.Artisan;
 import fun.toomanyhats.model.Hat;
+import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.Response;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -21,10 +24,17 @@ import jakarta.ws.rs.PUT;
 
 @Path("/hats")
 public class HatResource {
+    @Inject
+    public MeterRegistry registry;
+
     @GET
     @Produces("application/json")
-    public List<Hat> listAll() {
-        return Hat.listAll();
+    public List<Hat> listAll() {    
+        String testValue = "testing 123";
+
+        registry.counter("callsToGetHats", "foo", "bar", "test", testValue).increment(); 
+
+        return registry.timer("getHatsTime", "foo", "bar").record(() -> Hat.listAll());
     }
 
     @GET
